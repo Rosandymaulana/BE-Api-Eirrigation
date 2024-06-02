@@ -49,6 +49,22 @@ class BangunanIrigasiController extends Controller
             $query->where($filter[0], $filter[1], $filter[2]);
         }
 
+        if ($request->has('search')) {
+            $searchParams = $request->input('search');
+            foreach ($searchParams as $key => $value) {
+                if (strpos($key, ',') !== false) {
+                    $columns = explode(',', $key);
+                    $query->where(function ($query) use ($columns, $value) {
+                        foreach ($columns as $column) {
+                            $query->orWhere($column, 'ilike', "%{$value}%");
+                        }
+                    });
+                } else {
+                    $query->where($key, 'ilike', "%{$value}%");
+                }
+            }
+        }
+
         if ($request->has('limit')) {
             $bangunanIrigasi = $query->paginate($request->query('limit'));
         } else {
