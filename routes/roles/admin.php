@@ -20,6 +20,7 @@ use App\Http\Controllers\Report\ReportPhotoRepairController;
 use App\Http\Controllers\Report\ReportSegmentController;
 use App\Http\Controllers\Report\StatusController;
 use App\Http\Controllers\Spk\CriteriaController;
+use App\Http\Controllers\UploadDump\PhotoIrrigationsBuildingController;
 use App\Http\Controllers\UploadDump\UploadDumpController;
 use App\Http\Controllers\User\RoleController;
 use App\Http\Controllers\User\UserController;
@@ -151,3 +152,11 @@ Route::prefix('dss')->middleware(['api', 'auth:api'])->group(function () {
 
 Route::get('recapitulation', [HomeRecapController::class, 'index'])->middleware(['api', 'auth:api']);
 Route::get('info-area', [InfoAreaController::class, 'index'])->middleware(['api_key']);
+
+Route::prefix('photo-irrigations-building')->middleware(['api', 'auth:api'])->group(function () {
+    Route::get('', [PhotoIrrigationsBuildingController::class, 'index']);
+    Route::get('/{id}', [PhotoIrrigationsBuildingController::class, 'show']);
+    Route::post('', [PhotoIrrigationsBuildingController::class, 'store']);
+    Route::put('/{id}', [PhotoIrrigationsBuildingController::class, 'update']);
+    Route::delete('/{id}', [PhotoIrrigationsBuildingController::class, 'destroy']);
+});

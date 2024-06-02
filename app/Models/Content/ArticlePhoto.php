@@ -13,6 +13,7 @@ class ArticlePhoto extends Model
     public $incrementing = true;
 
     protected $fillable = [
+        'article_id',
         'upload_dump_id',
         'filename',
         'file_url',

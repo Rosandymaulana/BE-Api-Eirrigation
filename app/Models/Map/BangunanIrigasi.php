@@ -3,6 +3,7 @@
 namespace App\Models\Map;
 
 use App\Models\File\PhotoIrrigationBuilding;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -45,5 +46,12 @@ class BangunanIrigasi extends Model
     public function photo()
     {
         return $this->hasMany(PhotoIrrigationBuilding::class, 'building_id');
+    }
+
+    public function scopePhotoFilename(Builder $query, $filename)
+    {
+        return $query->whereHas('photo', function ($query) use ($filename) {
+            $query->where('filename', 'like', "%{$filename}%");
+        });
     }
 }

@@ -79,4 +79,57 @@ class ArticlePhotoController extends Controller
             ], 500);
         }
     }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            $photoArticle = ArticlePhoto::findOrFail($id);
+
+            $validatedData = $request->validate([
+                'article_id' => 'required',
+                'upload_dump_id' => 'required',
+                'filename' => 'required',
+                'file_url' => 'required',
+            ]);
+
+            $photoArticle->update($validatedData);
+
+            return response()->json([
+                'message' => 'Photo Article updated successfully',
+                'data' => new ArticlePhotoResource($photoArticle),
+            ], 200);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'error' => 'Validation failed',
+                'message' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to update Photo Article',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $role = ArticlePhoto::findOrFail($id);
+            $role->delete();
+
+            return response()->json([
+                'message' => 'Photo Article deleted successfully',
+            ], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'error' => 'Photo Article not found with provided ID',
+                'message' => $e->getMessage(),
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to delete Photo Article',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Validation\ValidationException;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class BangunanIrigasiController extends Controller
 {
@@ -19,6 +20,7 @@ class BangunanIrigasiController extends Controller
         $queryItems = $bangunanIrigasiFilter->transform($request);
 
         $query = QueryBuilder::for(BangunanIrigasi::class)
+            ->with('photo')
             ->allowedSorts([
                 'nama_bangunan',
                 'tipe_saluran',
@@ -37,6 +39,10 @@ class BangunanIrigasiController extends Controller
                 'created_at',
                 'updated_at',
                 'geom'
+            ])
+            ->allowedFilters([
+                AllowedFilter::partial('nama_bangunan'),
+                AllowedFilter::scope('photo_filename'),
             ]);
 
         foreach ($queryItems as $filter) {

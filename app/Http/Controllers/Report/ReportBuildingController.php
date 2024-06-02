@@ -8,6 +8,7 @@ use App\Models\Report\ReportBuilding;
 use App\Services\Report\ReportBuildingFilter;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
+use Illuminate\Validation\ValidationException;
 
 class ReportBuildingController extends Controller
 {
@@ -52,4 +53,7 @@ class ReportBuildingController extends Controller
 
         return new ReportBuildingResource($reportSegmentId);
     }
+
+
+    
 }

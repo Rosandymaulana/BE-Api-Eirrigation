@@ -8,7 +8,6 @@ use App\Models\Content\Article;
 use App\Services\Content\ArticleFilter;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -20,7 +19,7 @@ class ArticleController extends Controller
         $queryItems = $articleFilter->transform($request);
 
         $query = QueryBuilder::for(Article::class)
-            ->allowedSorts(['title', 'desc', 'image', 'created_at', 'updated_at'])
+            ->allowedSorts(['title', 'desc', 'created_at', 'updated_at'])
             ->with('article_photo');
 
         foreach ($queryItems as $filter) {
@@ -47,7 +46,6 @@ class ArticleController extends Controller
                 'author' => 'required',
                 'title' => 'required',
                 'desc' => 'required',
-                'image' => 'required',
                 'location' => 'sometimes',
                 'tags' => 'sometimes',
             ]);
@@ -87,7 +85,6 @@ class ArticleController extends Controller
                 'author' => 'sometimes',
                 'title' => 'sometimes',
                 'desc' => 'sometimes',
-                'image' => 'sometimes',
                 'location' => 'sometimes',
                 'tags' => 'sometimes',
             ]);
