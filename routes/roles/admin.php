@@ -40,6 +40,13 @@ Route::prefix('map')->middleware(['api', 'auth:api'])->group(function () {
     Route::get('segment', [MapSegmentController::class, 'index']);
 });
 
+Route::prefix('export')->middleware(['api', 'auth:api'])->group(
+    function () {
+        Route::get('bangunan-irigasi', [BangunanIrigasiController::class, 'export']);
+        // Route::post('bangunan-irigasi', [BangunanIrigasiController::class, 'export_with_activeUrl']);
+    }
+);
+
 Route::get('irrigations', [IrrigationListController::class, 'index'])->middleware(['api_key']);
 
 Route::prefix('roles')->middleware(['api', 'auth:api'])->group(function () {

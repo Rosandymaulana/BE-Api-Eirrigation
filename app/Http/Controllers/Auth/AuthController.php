@@ -24,8 +24,18 @@ class AuthController extends Controller
             return response()->json(['error' => 'Unauthorized'], 400);
         }
 
-        $user_id = auth()->user()->id;
-        $customClaims = ['user' => User::where('id', $user_id)->select('id as user_id', 'email', 'username')->first()];
+        // $user_id = auth()->user()->id;
+        $user = auth()->user();
+        $user->load('role');
+        if (!in_array($user->role->code, ['ADM', 'PTGS'])) {
+            auth()->logout();
+            return response()->json(['error' => 'Access Denied: Insufficient Permissions'], 403);
+        }
+
+        // $customClaims = ['user' => User::where('id', $user_id)->select('id as user_id', 'email', 'username')->first()];
+        $customClaims = [
+            'user' => $user->only('id', 'email', 'username')
+        ];
         $jwt = JWTAuth::claims($customClaims)->attempt($credentials);
 
         return $this->respondWithToken($jwt);

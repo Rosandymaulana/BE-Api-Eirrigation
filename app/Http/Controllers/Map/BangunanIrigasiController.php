@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Map;
 
+use App\Exports\BangunanIrigasiExport;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Map\BangunanIrigasiResource;
 use App\Models\Map\BangunanIrigasi;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\QueryBuilder\AllowedFilter;
 
 class BangunanIrigasiController extends Controller
@@ -82,6 +84,11 @@ class BangunanIrigasiController extends Controller
         $item->geojson = $geojson;
 
         return new BangunanIrigasiResource($item);
+    }
+
+    public function export()
+    {
+        return Excel::download(new BangunanIrigasiExport, 'bangunan-irigasi.xlsx');
     }
 
     public function update(Request $request, $id)
