@@ -76,6 +76,7 @@ Route::prefix('article')->middleware(['api', 'auth:api'])->group(function () {
 });
 
 Route::get('users-article', [ArticleController::class, 'index'])->middleware(['api_key']);
+Route::get('users-article/{id}', [ArticleController::class, 'show'])->middleware(['api_key']);
 
 Route::prefix('article-photo')->middleware(['api', 'auth:api'])->group(function () {
     Route::get('', [ArticlePhotoController::class, 'index']);
