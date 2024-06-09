@@ -33,7 +33,7 @@ Route::get('/reset-password/{token}', function (string $token) {
 
 Route::post('/reset-password', [ForgotPasswordController::class, 'reset_password'])->middleware('guest')->name('password.update');
 
-Route::group(['middleware' => ['normal.user:api']], function() {
+Route::group(['middleware' => ['normal.user:api']], function () {
     Route::get('/close-segments', [AppController::class, 'close_segments']);
     Route::post('/report', [ReportController::class, 'create_report']);
     Route::get('/report/{id}', [ReportController::class, 'report_by_id']);

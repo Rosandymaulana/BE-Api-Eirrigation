@@ -13,6 +13,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group([], function () {
+    Route::get('/', function () {
+        return response()->json([
+            'message' => 'Welcome to Project Eirrigation REST API',
+            'status' => 'success',
+            'statusCode' => 200
+        ]);
+    });
+
+    Route::get('api', function () {
+        return response()->json([
+            'statusCode' => 200,
+            'message' => 'Please contact developer for more information'
+        ]);
+    });
 });
