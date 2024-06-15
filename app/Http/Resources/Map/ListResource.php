@@ -4,6 +4,7 @@ namespace App\Http\Resources\Map;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
 
 class ListResource extends JsonResource
 {
@@ -24,7 +25,8 @@ class ListResource extends JsonResource
             'length' => $this->length,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'geojson' => $this->geojson,
+            'geojson' =>
+            DB::selectOne('SELECT *, ST_AsGeoJSON(ST_Transform(geom, 4326)) as geojson FROM map.irrigations WHERE id = ?', [$this->id])->geojson,
             'district' => DistrictResource::collection($this->whenLoaded('district_id')),
             'sub_district' => DistrictResource::collection($this->whenLoaded('sub_district_id')),
         ];
