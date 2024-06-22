@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Validation\ValidationException;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class ReportListController extends Controller
 {
@@ -20,6 +21,7 @@ class ReportListController extends Controller
         $queryItems = $reportFilter->transform($request);
 
         $query = QueryBuilder::for(ReportList::class)
+            ->with(['user', 'status', 'segments'])
             ->allowedSorts([
                 'user_id', 'status_id', 'no_ticket', 'type_list', 'note', 'maintenance_by', 'created_at', 'updated_at'
             ]);
@@ -29,14 +31,32 @@ class ReportListController extends Controller
         }
 
         if ($request->has('search')) {
+            $query->where(function ($query) use ($request) {
+                foreach ($request->query('search') as $columns => $value) {
+                    $columnsArray = explode(',', $columns);
 
-            $query->where('user_id', 'like', '%' . $request->input('search.user_id') . '%');
-            $query->where('status_id', 'like', '%' . $request->input('search.status_id') . '%');
-            $query->where('no_ticket', 'like', '%' . $request->input('search.no_ticket') . '%');
-
-            $searchTerm = $request->input('search.user.username');
-            $query->whereHas('user', function ($query) use ($searchTerm) {
-                $query->where('username', 'like', '%' . $searchTerm . '%');
+                    $query->where(function ($query) use ($columnsArray, $value) {
+                        foreach ($columnsArray as $column) {
+                            if ($column == 'fullname' || $column == 'phone') {
+                                $query->orWhereHas('user', function ($q) use ($column, $value) {
+                                    $q->whereRaw('lower(' . $column . ') like ?', ['%' . strtolower($value) . '%']);
+                                });
+                            } elseif ($column == 'status.name') {
+                                $query->orWhereHas('status', function ($q) use ($value) {
+                                    $q->whereRaw('lower(name) like ?', ['%' . strtolower($value) . '%']);
+                                });
+                            } elseif (strpos($value, '/') !== false && preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $value)) {
+                                $dateParts = explode('/', $value);
+                                $formattedDate = $dateParts[2] . '-' . $dateParts[1] . '-' . $dateParts[0];
+                                $query->orWhereDate('created_at', '=', $formattedDate);
+                            } elseif (preg_match('/^\d{4}$/', $value)) {
+                                $query->orWhereYear('created_at', '=', $value);
+                            } else {
+                                $query->orWhereRaw('lower(' . $column . ') like ?', ['%' . strtolower($value) . '%']);
+                            }
+                        }
+                    });
+                }
             });
         }
 
