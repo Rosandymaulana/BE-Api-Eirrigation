@@ -43,7 +43,8 @@ Route::prefix('map')->middleware(['api', 'auth:api'])->group(function () {
 Route::prefix('export')->middleware(['api', 'auth:api'])->group(
     function () {
         Route::get('bangunan-irigasi', [BangunanIrigasiController::class, 'export']);
-        // Route::post('bangunan-irigasi', [BangunanIrigasiController::class, 'export_with_activeUrl']);
+        Route::get('laporan-bangunan-irigasi', [ReportListController::class, 'reportexportbuilding']);
+        Route::get('laporan-saluran-irigasi', [ReportListController::class, 'reportexportirrigation']);
     }
 );
 

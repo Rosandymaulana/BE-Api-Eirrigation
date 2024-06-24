@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Report;
 
+use App\Exports\ReportBangunanExport;
+use App\Exports\ReportIrrigationExport;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Report\ReportListResource;
 use App\Models\Report\ReportList;
@@ -12,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Validation\ValidationException;
 use Spatie\QueryBuilder\AllowedFilter;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportListController extends Controller
 {
@@ -132,5 +135,15 @@ class ReportListController extends Controller
                 'message' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function reportexportbuilding()
+    {
+        return Excel::download(new ReportBangunanExport, 'recap_pelaporan-saluran-irigasi.xlsx');
+    }
+
+    public function reportexportirrigation()
+    {
+        return Excel::download(new ReportIrrigationExport, 'recap_pelaporan-bangunan-irigasi.xlsx');
     }
 }
