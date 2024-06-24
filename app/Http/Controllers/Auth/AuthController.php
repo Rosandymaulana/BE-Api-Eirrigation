@@ -32,6 +32,9 @@ class AuthController extends Controller
             return response()->json(['error' => 'Access Denied: Insufficient Permissions'], 403);
         }
 
+        $user->last_active = Carbon::now();
+        $user->save();
+
         // $customClaims = ['user' => User::where('id', $user_id)->select('id as user_id', 'email', 'username')->first()];
         $customClaims = [
             'user' => $user->only('id', 'email', 'username')
