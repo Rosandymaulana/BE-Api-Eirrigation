@@ -17,6 +17,7 @@ class ReportList extends Model
         'user_id',
         'status_id',
         'no_ticket',
+        'type_list',
         'note',
         'maintenance_by',
         'survey_status',

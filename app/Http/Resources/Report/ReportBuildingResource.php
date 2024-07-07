@@ -37,7 +37,7 @@ class ReportBuildingResource extends JsonResource
 
             if (in_array('photo', $embedValues)) {
                 $photos = $this->report_photo_building->map(function ($photo) {
-                    return new ReportPhotoResource($photo);
+                    return new ReportPhotoBuildingResource($photo);
                 });
 
                 $data['photo'] = $photos->toArray();

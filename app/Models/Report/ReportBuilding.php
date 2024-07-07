@@ -34,7 +34,7 @@ class ReportBuilding extends Model
 
     public function report_photo_building()
     {
-        return $this->hasMany(ReportPhoto::class, 'report_segment_id');
+        return $this->hasMany(ReportPhotoBuilding::class, 'report_building_id');
     }
 
     public function report_photo_repair_building()

@@ -13,7 +13,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Validation\ValidationException;
-use Spatie\QueryBuilder\AllowedFilter;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReportListController extends Controller
@@ -24,7 +23,7 @@ class ReportListController extends Controller
         $queryItems = $reportFilter->transform($request);
 
         $query = QueryBuilder::for(ReportList::class)
-            ->with(['user', 'status', 'segments'])
+            ->with(['user', 'status', 'segments', 'buildings'])
             ->allowedSorts([
                 'user_id', 'status_id', 'no_ticket', 'type_list', 'note', 'maintenance_by', 'created_at', 'updated_at'
             ]);
@@ -48,14 +47,26 @@ class ReportListController extends Controller
                                 $query->orWhereHas('status', function ($q) use ($value) {
                                     $q->whereRaw('lower(name) like ?', ['%' . strtolower($value) . '%']);
                                 });
+                            } elseif ($column == 'nama_bangunan') {
+                                $query->orWhereHas('buildings', function ($q) use ($value) {
+                                    $q->whereHas('build', function ($qq) use ($value) {
+                                        $qq->where('nama_bangunan', 'like', '%' . $value . '%');
+                                    });
+                                });
+                            } elseif ($column == 'nama_irigasi') {
+                                $query->orWhereHas('segments', function ($q) use ($value) {
+                                    $q->whereHas('segmen', function ($qq) use ($value) {
+                                        $qq->where('name', 'like', '%' . $value . '%');
+                                    });
+                                });
+                            } elseif ($column == 'no_ticket') {
+                                $query->orWhere('no_ticket', 'like', '%' . $value . '%');
                             } elseif (strpos($value, '/') !== false && preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $value)) {
                                 $dateParts = explode('/', $value);
                                 $formattedDate = $dateParts[2] . '-' . $dateParts[1] . '-' . $dateParts[0];
                                 $query->orWhereDate('created_at', '=', $formattedDate);
                             } elseif (preg_match('/^\d{4}$/', $value)) {
                                 $query->orWhereYear('created_at', '=', $value);
-                            } else {
-                                $query->orWhereRaw('lower(' . $column . ') like ?', ['%' . strtolower($value) . '%']);
                             }
                         }
                     });
@@ -118,8 +129,8 @@ class ReportListController extends Controller
     public function destroy($id)
     {
         try {
-            $role = ReportList::findOrFail($id);
-            $role->delete();
+            $report = ReportList::findOrFail($id);
+            $report->delete();
 
             return response()->json([
                 'message' => 'Report deleted successfully',

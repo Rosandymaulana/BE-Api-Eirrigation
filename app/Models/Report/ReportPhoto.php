@@ -13,6 +13,7 @@ class ReportPhoto extends Model
     protected $table = 'report.report_photo';
 
     protected $fillable = [
+        'report_id',
         'report_segment_id',
         'upload_dump_id',
         'filename',
