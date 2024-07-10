@@ -14,6 +14,7 @@ use App\Http\Controllers\Map\SubDistrictController;
 use App\Http\Controllers\Recapitulation\HomeRecapController;
 use App\Http\Controllers\Report\CountController;
 use App\Http\Controllers\Report\LaporBangunanIrigasi;
+use App\Http\Controllers\Report\LaporSaluranIrigasi;
 use App\Http\Controllers\Report\ReportBuildingController;
 use App\Http\Controllers\Report\ReportListController;
 use App\Http\Controllers\Report\ReportPhotoRepairBuildingController;
@@ -173,3 +174,4 @@ Route::prefix('photo-irrigations-building')->middleware(['api', 'auth:api'])->gr
 
 
 Route::post('lapor-bangunan-irigasi', [LaporBangunanIrigasi::class, 'store']);
+Route::post('lapor-saluran-irigasi', [LaporSaluranIrigasi::class, 'store']);

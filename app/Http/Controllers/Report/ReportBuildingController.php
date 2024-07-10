@@ -54,6 +54,31 @@ class ReportBuildingController extends Controller
         return new ReportBuildingResource($reportSegmentId);
     }
 
+    public function update(Request $request, $id)
+    {
+        try {
+            $segment = ReportBuilding::findOrFail($id);
 
-    
+            $validatedData = $request->validate([
+                'level' => 'required',
+            ]);
+
+            $segment->update($validatedData);
+
+            return response()->json([
+                'message' => 'Building updated successfully',
+                'data' => new ReportBuildingResource($segment),
+            ], 200);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'error' => 'Validation failed',
+                'message' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to update building',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Report\ReportList;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -40,6 +41,9 @@ class ReportIrrigationExport implements FromCollection, WithHeadings, WithMappin
         $data = [];
 
         foreach ($report->segments as $segment) {
+            $centerPointGeoJSON = DB::selectOne('SELECT ST_AsGeoJSON(ST_Transform(center_point, 4326)) as center_point FROM map.irrigations_segment WHERE id = ?', [$segment->segmen->id])->center_point;
+            $coordinates = json_decode($centerPointGeoJSON)->coordinates;
+
             $data[] = [
                 $report->no_ticket,
                 $report->status->name ?? '',
@@ -47,7 +51,7 @@ class ReportIrrigationExport implements FromCollection, WithHeadings, WithMappin
                 $report->user->email ?? '',
                 $report->user->phone ?? '',
                 $segment->segmen->name ?? '',
-                $segment->segmen->center_point,
+                $coordinates,
                 $segment->segmen->sub_district_name ?? '',
                 $segment->segmen->sub_district_type ?? '',
                 $segment->segmen->type ?? '',
