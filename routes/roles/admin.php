@@ -27,7 +27,7 @@ use App\Http\Controllers\UploadDump\UploadDumpController;
 use App\Http\Controllers\User\RoleController;
 use App\Http\Controllers\User\UserController;
 
-Route::prefix('map')->middleware(['api', 'auth:api'])->group(function () {
+Route::prefix('map')->middleware(['api', 'admin:api'])->group(function () {
     Route::get('sub-district', [SubDistrictController::class, 'index']);
     Route::get('sub-district/{id}', [SubDistrictController::class, 'show']);
     Route::get('district', [DistrictController::class, 'index']);
@@ -42,7 +42,7 @@ Route::prefix('map')->middleware(['api', 'auth:api'])->group(function () {
     Route::get('segment', [MapSegmentController::class, 'index']);
 });
 
-Route::prefix('export')->middleware(['api', 'auth:api'])->group(
+Route::prefix('export')->middleware(['api', 'admin:api'])->group(
     function () {
         Route::get('bangunan-irigasi', [BangunanIrigasiController::class, 'export']);
         Route::get('laporan-bangunan-irigasi', [ReportListController::class, 'reportexportbuilding']);
@@ -52,7 +52,7 @@ Route::prefix('export')->middleware(['api', 'auth:api'])->group(
 
 Route::get('irrigations', [IrrigationListController::class, 'index'])->middleware(['api_key']);
 
-Route::prefix('roles')->middleware(['api', 'auth:api'])->group(function () {
+Route::prefix('roles')->middleware(['api', 'admin:api'])->group(function () {
     Route::get('', [RoleController::class, 'index']);
     Route::get('/{id}', [RoleController::class, 'show']);
     Route::post('', [RoleController::class, 'store']);
@@ -61,7 +61,7 @@ Route::prefix('roles')->middleware(['api', 'auth:api'])->group(function () {
     Route::delete('', [RoleController::class, 'deleteAll']);
 });
 
-Route::prefix('users')->middleware(['api', 'auth:api'])->group(function () {
+Route::prefix('users')->middleware(['api', 'admin:api'])->group(function () {
     Route::get('', [UserController::class, 'index']);
     Route::get('/{id}', [UserController::class, 'show']);
     Route::post('', [UserController::class, 'store']);
@@ -70,7 +70,7 @@ Route::prefix('users')->middleware(['api', 'auth:api'])->group(function () {
     Route::delete('change-password/{id}', [UserController::class, 'change_password']);
 });
 
-Route::prefix('article')->middleware(['api', 'auth:api'])->group(function () {
+Route::prefix('article')->middleware(['api', 'admin:api'])->group(function () {
     Route::get('', [ArticleController::class, 'index']);
     Route::get('/{id}', [ArticleController::class, 'show']);
     Route::post('', [ArticleController::class, 'store']);
@@ -81,7 +81,7 @@ Route::prefix('article')->middleware(['api', 'auth:api'])->group(function () {
 Route::get('users-article', [ArticleController::class, 'index'])->middleware(['api_key']);
 Route::get('users-article/{id}', [ArticleController::class, 'show'])->middleware(['api_key']);
 
-Route::prefix('article-photo')->middleware(['api', 'auth:api'])->group(function () {
+Route::prefix('article-photo')->middleware(['api', 'admin:api'])->group(function () {
     Route::get('', [ArticlePhotoController::class, 'index']);
     Route::get('/{id}', [ArticlePhotoController::class, 'show']);
     Route::post('', [ArticlePhotoController::class, 'store']);
@@ -89,7 +89,7 @@ Route::prefix('article-photo')->middleware(['api', 'auth:api'])->group(function 
     Route::delete('/{id}', [ArticlePhotoController::class, 'destroy']);
 });
 
-Route::prefix('complaint')->middleware(['api', 'auth:api'])->group(function () {
+Route::prefix('complaint')->middleware(['api', 'admin:api'])->group(function () {
     Route::get('', [ComplaintController::class, 'index']);
     Route::get('/{id}', [ComplaintController::class, 'show']);
     Route::post('', [ComplaintController::class, 'store']);
@@ -97,7 +97,7 @@ Route::prefix('complaint')->middleware(['api', 'auth:api'])->group(function () {
     Route::delete('/{id}', [ComplaintController::class, 'destroy']);
 });
 
-Route::prefix('upload-dumps')->middleware(['api', 'auth:api'])->group(function () {
+Route::prefix('upload-dumps')->middleware(['api', 'admin:api'])->group(function () {
     Route::get('', [UploadDumpController::class, 'index']);
     Route::get('/{id}', [UploadDumpController::class, 'show']);
     Route::post('', [UploadDumpController::class, 'store']);
@@ -105,7 +105,7 @@ Route::prefix('upload-dumps')->middleware(['api', 'auth:api'])->group(function (
     Route::delete('/{id}', [UploadDumpController::class, 'destroy']);
 });
 
-Route::prefix('report-list')->middleware(['api', 'auth:api'])->group(function () {
+Route::prefix('report-list')->middleware(['api', 'admin:api'])->group(function () {
     Route::get('', [ReportListController::class, 'index']);
     Route::get('/{id}', [ReportListController::class, 'show']);
     Route::post('', [ReportListController::class, 'store']);
@@ -113,7 +113,7 @@ Route::prefix('report-list')->middleware(['api', 'auth:api'])->group(function ()
     Route::delete('/{id}', [ReportListController::class, 'destroy']);
 });
 
-Route::prefix('report-segment')->middleware(['api', 'auth:api'])->group(function () {
+Route::prefix('report-segment')->middleware(['api', 'admin:api'])->group(function () {
     Route::get('', [ReportSegmentController::class, 'index']);
     Route::get('/{id}', [ReportSegmentController::class, 'show']);
     Route::post('', [ReportSegmentController::class, 'store']);
@@ -121,7 +121,7 @@ Route::prefix('report-segment')->middleware(['api', 'auth:api'])->group(function
     Route::delete('/{id}', [ReportSegmentController::class, 'destroy']);
 });
 
-Route::prefix('report-building')->middleware(['api', 'auth:api'])->group(function () {
+Route::prefix('report-building')->middleware(['api', 'admin:api'])->group(function () {
     Route::get('', [ReportBuildingController::class, 'index']);
     Route::get('/{id}', [ReportBuildingController::class, 'show']);
     Route::post('', [ReportBuildingController::class, 'store']);
@@ -129,7 +129,7 @@ Route::prefix('report-building')->middleware(['api', 'auth:api'])->group(functio
     Route::delete('/{id}', [ReportBuildingController::class, 'destroy']);
 });
 
-Route::prefix('report-photo-repair')->middleware(['api', 'auth:api'])->group(function () {
+Route::prefix('report-photo-repair')->middleware(['api', 'admin:api'])->group(function () {
     Route::get('', [ReportPhotoRepairController::class, 'index']);
     Route::get('/{id}', [ReportPhotoRepairController::class, 'show']);
     Route::post('', [ReportPhotoRepairController::class, 'store']);
@@ -137,7 +137,7 @@ Route::prefix('report-photo-repair')->middleware(['api', 'auth:api'])->group(fun
     Route::delete('/{id}', [ReportPhotoRepairController::class, 'destroy']);
 });
 
-Route::prefix('report-photo-repair-building')->middleware(['api', 'auth:api'])->group(function () {
+Route::prefix('report-photo-repair-building')->middleware(['api', 'admin:api'])->group(function () {
     Route::get('', [ReportPhotoRepairBuildingController::class, 'index']);
     Route::get('/{id}', [ReportPhotoRepairBuildingController::class, 'show']);
     Route::post('', [ReportPhotoRepairBuildingController::class, 'store']);
@@ -145,7 +145,7 @@ Route::prefix('report-photo-repair-building')->middleware(['api', 'auth:api'])->
     Route::delete('/{id}', [ReportPhotoRepairBuildingController::class, 'destroy']);
 });
 
-Route::prefix('status')->middleware(['api', 'auth:api'])->group(function () {
+Route::prefix('status')->middleware(['api', 'admin:api'])->group(function () {
     Route::get('', [StatusController::class, 'index']);
     Route::get('/{id}', [StatusController::class, 'show']);
     Route::post('', [StatusController::class, 'store']);
@@ -153,18 +153,18 @@ Route::prefix('status')->middleware(['api', 'auth:api'])->group(function () {
     Route::delete('/{id}', [StatusController::class, 'destroy']);
 });
 
-Route::prefix('count')->middleware(['api', 'auth:api'])->group(function () {
+Route::prefix('count')->middleware(['api', 'admin:api'])->group(function () {
     Route::get('', [CountController::class, 'index']);
 });
 
-Route::prefix('dss')->middleware(['api', 'auth:api'])->group(function () {
+Route::prefix('dss')->middleware(['api', 'admin:api'])->group(function () {
     Route::get('', [CriteriaController::class, 'index']);
 });
 
-Route::get('recapitulation', [HomeRecapController::class, 'index'])->middleware(['api', 'auth:api']);
+Route::get('recapitulation', [HomeRecapController::class, 'index'])->middleware(['api', 'admin:api']);
 Route::get('info-area', [InfoAreaController::class, 'index'])->middleware(['api_key']);
 
-Route::prefix('photo-irrigations-building')->middleware(['api', 'auth:api'])->group(function () {
+Route::prefix('photo-irrigations-building')->middleware(['api', 'admin:api'])->group(function () {
     Route::get('', [PhotoIrrigationsBuildingController::class, 'index']);
     Route::get('/{id}', [PhotoIrrigationsBuildingController::class, 'show']);
     Route::post('', [PhotoIrrigationsBuildingController::class, 'store']);
