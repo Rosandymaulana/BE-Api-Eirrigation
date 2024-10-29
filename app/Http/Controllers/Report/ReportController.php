@@ -122,6 +122,11 @@ class ReportController extends Controller
                         ->join('map.irrigations', 'map.irrigations_segment.irrigation_id', '=', 'map.irrigations.id')
                         ->select('report.report_list.id', 'report.report_list.no_ticket', 'report.report_segment.level', 'report.report_segment.note', 'report.status.name as status', 'map.irrigations.name as irrigation', 'map.irrigations.type as canal', 'file.upload_dump.file_url as image')
                         ->get();
+            if ($report=='[]'){
+                return response()->json([
+                    'message' => 'There is no report with that id'
+                ], 404);
+            }
             return response()->json($report);
         } catch (\Exception $e) {
             return response()->json([
