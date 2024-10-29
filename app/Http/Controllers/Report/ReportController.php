@@ -134,28 +134,55 @@ class ReportController extends Controller
     function reports_by_user_id(Request $request) {
         $userId = auth()->user()->id;
         $search = $request->input('search');
-        if($search==null){
+        $filter = $request->input('filter');
+        if($search!=null&&$filter!=null){
+            $report = DB::table('report.report_list')
+                        ->where('report.report_list.user_id', '=', $userId)
+                        ->where('report.status.name', '=', $filter)
+                        ->where('map.irrigations.name', 'ILIKE', "%$search%")
+                        ->join('report.status', 'report.report_list.status_id', '=', 'report.status.id')
+                        ->join('report.report_segment', 'report.report_list.id', '=', 'report.report_segment.report_id')
+                        ->join('map.irrigations_segment', 'report.report_segment.segment_id', '=', 'map.irrigations_segment.id')
+                        ->join('map.irrigations', 'map.irrigations_segment.irrigation_id', '=', 'map.irrigations.id')
+                        ->select('report.report_list.id', 'report.report_list.no_ticket', 'report.report_list.created_at', 'report.report_segment.level', 'report.status.name as status', 'map.irrigations.name as irrigation', 'map.irrigations.type as canal')
+                        ->distinct('report.report_list.id')
+                        ->get();
+            return response()->json($report);
+        } else if($filter!=null){
+            $report = DB::table('report.report_list')
+                        ->where('report.report_list.user_id', '=', $userId)
+                        ->where('report.status.name', '=', $filter)
+                        ->join('report.status', 'report.report_list.status_id', '=', 'report.status.id')
+                        ->join('report.report_segment', 'report.report_list.id', '=', 'report.report_segment.report_id')
+                        ->join('map.irrigations_segment', 'report.report_segment.segment_id', '=', 'map.irrigations_segment.id')
+                        ->join('map.irrigations', 'map.irrigations_segment.irrigation_id', '=', 'map.irrigations.id')
+                        ->select('report.report_list.id', 'report.report_list.no_ticket', 'report.report_list.created_at', 'report.report_segment.level', 'report.status.name as status', 'map.irrigations.name as irrigation', 'map.irrigations.type as canal')
+                        ->distinct('report.report_list.id')
+                        ->get();
+            return response()->json($report);
+        } else if($search!=null){
+            $report = DB::table('report.report_list')
+                        ->where('report.report_list.user_id', '=', $userId)
+                        ->where('map.irrigations.name', 'ILIKE', "%$search%")
+                        ->join('report.status', 'report.report_list.status_id', '=', 'report.status.id')
+                        ->join('report.report_segment', 'report.report_list.id', '=', 'report.report_segment.report_id')
+                        ->join('map.irrigations_segment', 'report.report_segment.segment_id', '=', 'map.irrigations_segment.id')
+                        ->join('map.irrigations', 'map.irrigations_segment.irrigation_id', '=', 'map.irrigations.id')
+                        ->select('report.report_list.id', 'report.report_list.no_ticket', 'report.report_list.created_at', 'report.report_segment.level', 'report.status.name as status', 'map.irrigations.name as irrigation', 'map.irrigations.type as canal')
+                        ->distinct('report.report_list.id')
+                        ->get();
+            return response()->json($report);
+        } else{
             $report = DB::table('report.report_list')
                         ->where('report.report_list.user_id', '=', $userId)
                         ->join('report.status', 'report.report_list.status_id', '=', 'report.status.id')
                         ->join('report.report_segment', 'report.report_list.id', '=', 'report.report_segment.report_id')
                         ->join('map.irrigations_segment', 'report.report_segment.segment_id', '=', 'map.irrigations_segment.id')
                         ->join('map.irrigations', 'map.irrigations_segment.irrigation_id', '=', 'map.irrigations.id')
-                        ->select('report.report_list.id', 'report.report_list.no_ticket', 'report.report_segment.level', 'report.status.name as status', 'map.irrigations.name as irrigation', 'map.irrigations.type as canal')
+                        ->select('report.report_list.id', 'report.report_list.no_ticket', 'report.report_list.created_at', 'report.report_segment.level', 'report.status.name as status', 'map.irrigations.name as irrigation', 'map.irrigations.type as canal')
                         ->distinct('report.report_list.id')
                         ->get();
             return response()->json($report);
         }
-        $report = DB::table('report.report_list')
-                    ->where('report.report_list.user_id', '=', $userId)
-                    ->where('map.irrigations.name', 'ILIKE', "%$search%")
-                    ->join('report.status', 'report.report_list.status_id', '=', 'report.status.id')
-                    ->join('report.report_segment', 'report.report_list.id', '=', 'report.report_segment.report_id')
-                    ->join('map.irrigations_segment', 'report.report_segment.segment_id', '=', 'map.irrigations_segment.id')
-                    ->join('map.irrigations', 'map.irrigations_segment.irrigation_id', '=', 'map.irrigations.id')
-                    ->select('report.report_list.id', 'report.report_list.no_ticket', 'report.report_segment.level', 'report.status.name as status', 'map.irrigations.name as irrigation', 'map.irrigations.type as canal')
-                    ->distinct('report.report_list.id')
-                    ->get();
-        return response()->json($report);
     }
 }
