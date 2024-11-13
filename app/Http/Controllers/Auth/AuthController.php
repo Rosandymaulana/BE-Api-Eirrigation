@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -70,11 +73,23 @@ class AuthController extends Controller
             'created_at' => Carbon::now(),
         ]);
 
+        event(new Registered($user));
+        $auth = Auth::login($user);
+        
         if ($user) {
-            return response()->json(['message' => 'Pendaftaran Berhasil']);
+            return response()->json([
+                'message' => 'Pendaftaran Berhasil',
+                'jwtToken' => $auth
+            ]);
         } else {
             return response()->json(['message' => 'Pendaftaran Gagal']);
         };
+    }
+
+    public function verify(EmailVerificationRequest $request)
+    {
+        $request->fulfill();
+        return response()->json(['message' => 'Verifikasi email berhasil']);
     }
 
     public function me()
