@@ -29,11 +29,11 @@ class AuthController extends Controller
 
         // $user_id = auth()->user()->id;
         $user = auth()->user();
-        $user->load('role');
-        if (!in_array($user->role->code, ['ADM', 'PTGS'])) {
-            auth()->logout();
-            return response()->json(['error' => 'Access Denied: Insufficient Permissions'], 403);
-        }
+        // $user->load('role');
+        // if (!in_array($user->role->code, ['ADM', 'PTGS'])) {
+        //     auth()->logout();
+        //     return response()->json(['error' => 'Access Denied: Insufficient Permissions'], 403);
+        // }
 
         $user->last_active = Carbon::now();
         $user->save();
