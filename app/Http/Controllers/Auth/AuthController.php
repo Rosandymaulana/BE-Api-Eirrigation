@@ -51,15 +51,15 @@ class AuthController extends Controller
     {
         $validator = Validator::make(request()->all(), [
             'urole_id' => 'required',
-            'username' => 'required',
-            'email' => 'required',
+            'username' => 'required|unique:App\Models\User,username',
+            'email' => 'required|unique:App\Models\User,email',
             'password' => 'required',
             'fullname' => 'required',
             // 'phone' => 'required',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 200);
+            return response()->json(['error' => $validator->messages()], 400);
         }
 
         $user = User::create([
