@@ -56,6 +56,7 @@ class ReportController extends Controller
         
                 $bucket->upload(fopen($imagePath, 'r'), [
                     'name' => 'image/' . $imageName,
+                    'predefinedAcl' => 'publicRead'
                 ]);
                 
                 $uploadDump = UploadDump::create([
@@ -120,7 +121,7 @@ class ReportController extends Controller
                         ->join('file.upload_dump', 'report.report_photo.upload_dump_id', '=', 'file.upload_dump.id')
                         ->join('map.irrigations_segment', 'report.report_segment.segment_id', '=', 'map.irrigations_segment.id')
                         ->join('map.irrigations', 'map.irrigations_segment.irrigation_id', '=', 'map.irrigations.id')
-                        ->select('report.report_list.id', 'report.report_list.no_ticket', 'report.report_segment.level', 'report.report_segment.note', 'report.status.name as status', 'map.irrigations.name as irrigation', 'map.irrigations.type as canal', 'file.upload_dump.file_url as image', 'map.irrigations_segment.center_point')
+                        ->select('report.report_list.id', 'report.report_list.no_ticket', 'report.report_list.created_at', 'report.report_segment.level', 'report.report_segment.note', 'report.status.name as status', 'map.irrigations.name as irrigation', 'map.irrigations.type as canal', 'file.upload_dump.file_url as image', 'map.irrigations_segment.center_point')
                         ->get();
             if ($report=='[]'){
                 return response()->json([
