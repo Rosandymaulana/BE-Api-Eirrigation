@@ -75,7 +75,7 @@ class PasswordReset extends Notification
             return call_user_func(static::$createUrlCallback, $notifiable, $this->token);
         }
         $email = $notifiable->getEmailForPasswordReset();
-        return url("http://localhost:5173/ganti-password/$this->token?email=$email");
+        return url(env('WEB_MOBILE_URL')."/ganti-password/$this->token?email=$email");
     }
 
     /**

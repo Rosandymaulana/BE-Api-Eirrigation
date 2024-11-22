@@ -24,7 +24,7 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
-            $url = str_replace("http://127.0.0.1:8000/api", "http://localhost:5173", $url);
+            $url = str_replace(env('APP_URL')."/api", env('WEB_MOBILE_URL'), $url);
             return (new MailMessage)
                 ->greeting('Halo!')
                 ->subject('Verifikasi Email Anda')
